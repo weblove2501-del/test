@@ -1,0 +1,5 @@
+[
+  { "empNo": "LG001", "name": "김철수", "deptName": "인사팀", "position": "대리" },
+  { "empNo": "LG002", "name": "이영희", "deptName": "개발팀", "position": "과장" },
+  { "empNo": "LG003", "name": "박민수", "deptName": "품질보증팀", "position": "사원" }
+]

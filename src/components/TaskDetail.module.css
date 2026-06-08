@@ -1,0 +1,95 @@
+.detail {
+  display: grid;
+  gap: 20px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+}
+
+.secondaryButton,
+.dangerButton {
+  border: none;
+  border-radius: 14px;
+  padding: 12px 18px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.secondaryButton {
+  background: #e0f2fe;
+  color: #0c4a6e;
+}
+
+.secondaryButton:hover {
+  background: #bae6fd;
+}
+
+.dangerButton {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.dangerButton:hover {
+  background: #fecaca;
+}
+
+.content {
+  display: grid;
+  gap: 18px;
+  background: white;
+  padding: 24px;
+  border-radius: 22px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+}
+
+.meta {
+  display: grid;
+  gap: 16px;
+}
+
+.meta > div {
+  display: grid;
+  gap: 6px;
+}
+
+.meta strong {
+  display: block;
+  color: #475569;
+}
+
+.meta p,
+.description p {
+  margin: 0;
+  color: #0f172a;
+}
+
+.description {
+  display: grid;
+  gap: 10px;
+}
+
+.description strong {
+  color: #475569;
+}
+
+select {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid #cbd5e1;
+}
+
+@media (min-width: 900px) {
+  .content {
+    grid-template-columns: minmax(360px, 1fr) 1.4fr;
+  }
+}

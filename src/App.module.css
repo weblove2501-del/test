@@ -1,0 +1,31 @@
+.app {
+  display: flex;
+  min-height: 100vh;
+  background: #f5f7fb;
+  color: #1f2937;
+}
+
+.main {
+  flex: 1;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  box-sizing: border-box;
+}
+
+.notification {
+  position: sticky;
+  top: 16px;
+  z-index: 1;
+  border-radius: 14px;
+  border: 1px solid #7dd3fc;
+  background: #ecfeff;
+  color: #0f172a;
+  padding: 14px 18px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+}
+
+.hidden {
+  display: none;
+}
