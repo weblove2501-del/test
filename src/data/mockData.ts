@@ -1,10 +1,10 @@
-import type { Task, User } from '../types'
+import type { Task, User } from '../types';
 
 export const mockUsers: User[] = [
   { id: 'u1', name: '관리자', role: 'admin', email: 'admin@example.com' },
   { id: 'u2', name: '홍길동', role: 'user', email: 'user@example.com' },
   { id: 'u3', name: '이영희', role: 'user', email: 'developer@example.com' },
-]
+];
 
 export const mockTasks: Task[] = [
   {
@@ -37,4 +37,4 @@ export const mockTasks: Task[] = [
     dueDate: '2026-06-05',
     createdAt: '2026-05-30',
   },
-]
+];

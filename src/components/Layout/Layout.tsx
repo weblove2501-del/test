@@ -1,43 +1,57 @@
-import { useEffect, useMemo, useState } from 'react'
-import styles from './Layout.module.css'
+import { useEffect, useMemo, useState } from 'react';
+import { useAppContext } from '../../context/AppContext';
+import httpFetch from '../../api/http';
+import styles from './Layout.module.css';
 
 interface RawEmployee {
-  empNo: string
-  name: string
-  deptName: string
-  position: string
+  empNo: string;
+  name: string;
+  deptName: string;
+  position: string;
 }
 
 interface Employee extends RawEmployee {
-  status: '진행' | '완료' | '대기'
-  assignedTo: string
+  status: '진행' | '완료' | '대기';
+  assignedTo: string;
 }
 
 interface FilterField {
-  key: 'keyword' | 'deptName' | 'status'
-  label: string
-  placeholder: string
-  type: 'text' | 'select'
-  options?: string[]
+  key: 'keyword' | 'deptName' | 'status';
+  label: string;
+  placeholder: string;
+  type: 'text' | 'select';
+  options?: string[];
 }
 
 interface ColumnDefinition {
-  key: keyof Employee | 'actions'
-  label: string
-  width?: string
+  key: keyof Employee | 'actions';
+  label: string;
+  width?: string;
 }
 
 const gnbMenu = [
   { label: '대시보드', subItems: ['전체 현황', '오늘 일정'] },
   { label: '업무관리', subItems: ['진행업무', '완료업무', '내 할 일'] },
   { label: '보고서', subItems: ['주간 리포트', '월간 리포트'] },
-]
+];
 
 const filterFields: FilterField[] = [
   { key: 'keyword', label: '검색어', placeholder: '사번, 이름, 직무 검색', type: 'text' },
-  { key: 'deptName', label: '부서', placeholder: '부서 선택', type: 'select', options: ['전체', '인사팀', '개발팀', '품질보증팀'] },
-  { key: 'status', label: '상태', placeholder: '상태 선택', type: 'select', options: ['전체', '진행', '완료', '대기'] },
-]
+  {
+    key: 'deptName',
+    label: '부서',
+    placeholder: '부서 선택',
+    type: 'select',
+    options: ['전체', '인사팀', '개발팀', '품질보증팀'],
+  },
+  {
+    key: 'status',
+    label: '상태',
+    placeholder: '상태 선택',
+    type: 'select',
+    options: ['전체', '진행', '완료', '대기'],
+  },
+];
 
 const tableColumns: ColumnDefinition[] = [
   { key: 'empNo', label: '사번', width: '120px' },
@@ -47,44 +61,45 @@ const tableColumns: ColumnDefinition[] = [
   { key: 'status', label: '업무 상태', width: '140px' },
   { key: 'assignedTo', label: '담당자', width: '160px' },
   { key: 'actions', label: '작업', width: '120px' },
-]
+];
 
 const defaultTabs = [
   { id: 'dashboard', title: '대시보드' },
   { id: 'tasks', title: '진행업무' },
   { id: 'report', title: '보고서' },
-]
+];
 
 const statusColor = {
   진행: styles.statusBadgeActive,
   완료: styles.statusBadgeSuccess,
   대기: styles.statusBadgeWarning,
-}
+};
 
 export default function Layout() {
-  const [isLnbOpen, setIsLnbOpen] = useState(true)
-  const [employees, setEmployees] = useState<Employee[]>([])
-  const [search, setSearch] = useState({ keyword: '', deptName: '전체', status: '전체' })
-  const [activeTabId, setActiveTabId] = useState('dashboard')
+  const { notification } = useAppContext();
+  const [isLnbOpen, setIsLnbOpen] = useState(true);
+  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [search, setSearch] = useState({ keyword: '', deptName: '전체', status: '전체' });
+  const [activeTabId, setActiveTabId] = useState('dashboard');
 
   useEffect(() => {
     async function fetchEmployees() {
       try {
-        const response = await fetch('/mock/employees.json')
-        const data = (await response.json()) as RawEmployee[]
+        const response = await httpFetch('/mock/employees.json');
+        const data = (await response.json()) as RawEmployee[];
         const enriched: Employee[] = data.map((item, index) => ({
           ...item,
           status: index % 3 === 0 ? '진행' : index % 3 === 1 ? '완료' : '대기',
           assignedTo: index === 0 ? '김철수' : index === 1 ? '이영희' : '박민수',
-        }))
-        setEmployees(enriched)
+        }));
+        setEmployees(enriched);
       } catch (error) {
-        console.error('직원 데이터 로드 실패', error)
+        console.error('직원 데이터 로드 실패', error);
       }
     }
 
-    fetchEmployees()
-  }, [])
+    fetchEmployees();
+  }, []);
 
   const filteredEmployees = useMemo(
     () =>
@@ -93,35 +108,34 @@ export default function Layout() {
           search.keyword.trim() === '' ||
           employee.empNo.includes(search.keyword) ||
           employee.name.includes(search.keyword) ||
-          employee.position.includes(search.keyword)
+          employee.position.includes(search.keyword);
 
-        const deptMatched =
-          search.deptName === '전체' || employee.deptName === search.deptName
+        const deptMatched = search.deptName === '전체' || employee.deptName === search.deptName;
 
-        const statusMatched = search.status === '전체' || employee.status === search.status
+        const statusMatched = search.status === '전체' || employee.status === search.status;
 
-        return keywordMatched && deptMatched && statusMatched
+        return keywordMatched && deptMatched && statusMatched;
       }),
     [employees, search],
-  )
+  );
 
   const handleFilterChange = (key: keyof typeof search, value: string) => {
-    setSearch((prev) => ({ ...prev, [key]: value }))
-  }
+    setSearch((prev) => ({ ...prev, [key]: value }));
+  };
 
   const handleToggleLnb = () => {
-    setIsLnbOpen((prev) => !prev)
-  }
+    setIsLnbOpen((prev) => !prev);
+  };
 
   const handleTabClose = (id: string) => {
     setActiveTabId((current) => {
       if (current === id && defaultTabs.length > 1) {
-        const nextTab = defaultTabs.find((tab) => tab.id !== id)
-        return nextTab?.id ?? current
+        const nextTab = defaultTabs.find((tab) => tab.id !== id);
+        return nextTab?.id ?? current;
       }
-      return current
-    })
-  }
+      return current;
+    });
+  };
 
   return (
     <div className={styles.layout}>
@@ -155,6 +169,14 @@ export default function Layout() {
       </header>
 
       <div className={styles.layout__body}>
+        {/* screen-reader live region for global notifications */}
+        <div
+          role="status"
+          aria-live="polite"
+          style={{ position: 'absolute', left: -9999, top: 'auto', width: 1, height: 1, overflow: 'hidden' }}
+        >
+          {notification ?? ''}
+        </div>
         <aside
           className={`${styles.lnb} ${!isLnbOpen ? styles['lnb--collapsed'] : ''}`}
           aria-expanded={isLnbOpen}
@@ -181,7 +203,13 @@ export default function Layout() {
             </div>
             <div className={styles.content__meta}>
               <span className={styles.meta__label}>활성 탭</span>
-              <strong className={styles.meta__value}>{activeTabId === 'dashboard' ? '대시보드' : activeTabId === 'tasks' ? '진행업무' : '보고서'}</strong>
+              <strong className={styles.meta__value}>
+                {activeTabId === 'dashboard'
+                  ? '대시보드'
+                  : activeTabId === 'tasks'
+                    ? '진행업무'
+                    : '보고서'}
+              </strong>
             </div>
           </section>
 
@@ -228,10 +256,10 @@ export default function Layout() {
               <thead className={styles.table__head}>
                 <tr className={styles.table__row}>
                   {tableColumns.map((column) => (
-                  <th key={column.key} className={styles.table__cell}>
-                    {column.label}
-                  </th>
-                ))}
+                    <th key={column.key} className={styles.table__cell}>
+                      {column.label}
+                    </th>
+                  ))}
                 </tr>
               </thead>
               <tbody>
@@ -240,26 +268,31 @@ export default function Layout() {
                     {tableColumns.map((column) => {
                       if (column.key === 'actions') {
                         return (
-                          <td key={`${employee.empNo}-${column.key}`} className={styles.table__cell}>
+                          <td
+                            key={`${employee.empNo}-${column.key}`}
+                            className={styles.table__cell}
+                          >
                             <button type="button" className={styles.actionButton}>
                               상세
                             </button>
                           </td>
-                        )
+                        );
                       }
 
-                      const value = employee[column.key as keyof Employee]
+                      const value = employee[column.key as keyof Employee];
                       return (
                         <td key={`${employee.empNo}-${column.key}`} className={styles.table__cell}>
                           {column.key === 'status' ? (
-                            <span className={`${styles.statusBadge} ${statusColor[value as '진행' | '완료' | '대기']}`}>
+                            <span
+                              className={`${styles.statusBadge} ${statusColor[value as '진행' | '완료' | '대기']}`}
+                            >
                               {value}
                             </span>
                           ) : (
                             value
                           )}
                         </td>
-                      )
+                      );
                     })}
                   </tr>
                 ))}
@@ -271,8 +304,15 @@ export default function Layout() {
 
       <footer className={styles.mdiTabBar}>
         {defaultTabs.map((tab) => (
-          <div key={tab.id} className={`${styles.mdiTabBar__tab} ${activeTabId === tab.id ? styles['mdiTabBar__tab--active'] : ''}`}>
-            <button type="button" className={styles.mdiTabBar__title} onClick={() => setActiveTabId(tab.id)}>
+          <div
+            key={tab.id}
+            className={`${styles.mdiTabBar__tab} ${activeTabId === tab.id ? styles['mdiTabBar__tab--active'] : ''}`}
+          >
+            <button
+              type="button"
+              className={styles.mdiTabBar__title}
+              onClick={() => setActiveTabId(tab.id)}
+            >
               {tab.title}
             </button>
             <button
@@ -287,5 +327,5 @@ export default function Layout() {
         ))}
       </footer>
     </div>
-  )
+  );
 }

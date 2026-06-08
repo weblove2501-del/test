@@ -9,11 +9,11 @@
 }
 
 .modal {
-  width: min(640px, 100%);
+  width: min(720px, 100%);
   background: white;
-  border-radius: 28px;
-  padding: 24px;
-  box-shadow: 0 20px 60px rgba(15, 23, 42, 0.18);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 14px 40px rgba(15, 23, 42, 0.12);
 }
 
 .header {
@@ -21,6 +21,17 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: 14px;
+}
+
+.header h2 {
+  margin: 0 0 6px 0;
+  font-size: 20px;
+}
+
+.header p {
+  margin: 0;
+  color: #64748b;
+  font-size: 13px;
 }
 
 .closeButton {
@@ -53,7 +64,10 @@ select {
   padding: 12px 14px;
   color: #0f172a;
   background: #f8fafc;
-  transition: border-color 120ms ease, box-shadow 120ms ease, background 120ms ease;
+  transition:
+    border-color 120ms ease,
+    box-shadow 120ms ease,
+    background 120ms ease;
 }
 
 textarea {
@@ -95,6 +109,11 @@ textarea {
 
 .saveButton:hover {
   background: #1e40af;
+}
+
+.saveButton:disabled {
+  background: #93c5fd;
+  cursor: not-allowed;
 }
 
 .error {

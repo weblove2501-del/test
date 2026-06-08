@@ -40,15 +40,15 @@ export default defineConfig([
       // other options...
     },
   },
-])
+]);
 ```
 
 You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
 ```js
 // eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+import reactX from 'eslint-plugin-react-x';
+import reactDom from 'eslint-plugin-react-dom';
 
 export default defineConfig([
   globalIgnores(['dist']),
@@ -69,5 +69,40 @@ export default defineConfig([
       // other options...
     },
   },
-])
+]);
 ```
+
+## Local development (this project)
+
+This repository includes a small mock auth server for local testing and the usual Vite dev server.
+
+- Start the mock auth API server (listens on port 4000):
+
+```bash
+pnpm run start:api
+```
+
+- Start the front-end dev server:
+
+```bash
+pnpm dev
+```
+
+- Build for production:
+
+```bash
+pnpm build
+```
+
+Login test (mock server):
+
+```bash
+curl -X POST http://localhost:4000/api/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"admin@example.com","password":"password"}'
+```
+
+Notes:
+
+- The mock API will return a token and user for `admin@example.com` with password `password`.
+- `AppContext` first tries to call `/api/login`. If the endpoint is not available it falls back to local mock users.

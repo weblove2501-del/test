@@ -1,20 +1,26 @@
-import styles from './Sidebar.module.css'
-import type { Role } from '../types'
+import styles from './Sidebar.module.css';
+import type { Role } from '../types';
 
 interface SidebarProps {
-  userName: string
-  role: Role
-  activeView: 'dashboard' | 'tasks' | 'detail'
-  onViewChange: (view: 'dashboard' | 'tasks' | 'detail') => void
-  onLogout: () => void
+  userName: string;
+  role: Role;
+  activeView: 'dashboard' | 'tasks' | 'detail';
+  onViewChange: (view: 'dashboard' | 'tasks' | 'detail') => void;
+  onLogout: () => void;
 }
 
 const menuItems = [
   { id: 'dashboard', label: '대시보드' },
   { id: 'tasks', label: '업무 목록' },
-]
+];
 
-export default function Sidebar({ userName, role, activeView, onViewChange, onLogout }: SidebarProps) {
+export default function Sidebar({
+  userName,
+  role,
+  activeView,
+  onViewChange,
+  onLogout,
+}: SidebarProps) {
   return (
     <aside className={styles.sidebar}>
       <div className={styles.brand}>
@@ -49,5 +55,5 @@ export default function Sidebar({ userName, role, activeView, onViewChange, onLo
         로그아웃
       </button>
     </aside>
-  )
+  );
 }
