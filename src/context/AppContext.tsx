@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useEffect, useMemo, useReducer } from 'react';
 import type { ReactNode } from 'react';
 import { mockTasks, mockUsers } from '../data/mockData';
@@ -11,6 +12,8 @@ interface AppState {
   selectedTaskId: string | null;
   filter: FilterState;
   notification: string | null;
+  tabs: { id: string; title: string }[];
+  activeTabId: string | null;
 }
 
 type AppAction =
@@ -22,7 +25,10 @@ type AppAction =
   | { type: 'updateTask'; task: Task }
   | { type: 'deleteTask'; taskId: string }
   | { type: 'notify'; message: string }
-  | { type: 'clearNotification' };
+  | { type: 'clearNotification' }
+  | { type: 'openTab'; tab: { id: string; title: string } }
+  | { type: 'closeTab'; id: string }
+  | { type: 'activateTab'; id: string }
 
 interface AppContextValue extends AppState {
   login: (email: string, password: string) => Promise<true | string>;
@@ -34,6 +40,9 @@ interface AppContextValue extends AppState {
   selectTask: (taskId: string | null) => void;
   notify: (message: string) => void;
   users: User[];
+  openTab: (tab: { id: string; title: string }) => void;
+  closeTab: (id: string) => void;
+  activateTab: (id: string) => void;
 }
 
 const initialState: AppState = {
@@ -46,6 +55,8 @@ const initialState: AppState = {
     assignee: '전체',
   },
   notification: null,
+  tabs: [{ id: 'home', title: 'Home' }],
+  activeTabId: 'home',
 };
 
 function appReducer(state: AppState, action: AppAction): AppState {
@@ -81,6 +92,19 @@ function appReducer(state: AppState, action: AppAction): AppState {
       return { ...state, notification: action.message };
     case 'clearNotification':
       return { ...state, notification: null };
+    case 'openTab':
+      // if already exists, activate
+      if (state.tabs.find(t => t.id === action.tab.id)) {
+        return { ...state, activeTabId: action.tab.id }
+      }
+      return { ...state, tabs: [...state.tabs, action.tab], activeTabId: action.tab.id }
+    case 'closeTab': {
+      const remaining = state.tabs.filter(t => t.id !== action.id)
+      const newActive = state.activeTabId === action.id ? (remaining.length ? remaining[remaining.length - 1].id : null) : state.activeTabId
+      return { ...state, tabs: remaining, activeTabId: newActive }
+    }
+    case 'activateTab':
+      return { ...state, activeTabId: action.id }
     default:
       return state;
   }
@@ -187,6 +211,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const deleteTask = (taskId: string) => dispatch({ type: 'deleteTask', taskId });
   const selectTask = (taskId: string | null) => dispatch({ type: 'selectTask', taskId });
   const notify = (message: string) => dispatch({ type: 'notify', message });
+  const openTab = (tab: { id: string; title: string }) => dispatch({ type: 'openTab', tab })
+  const closeTab = (id: string) => dispatch({ type: 'closeTab', id })
+  const activateTab = (id: string) => dispatch({ type: 'activateTab', id })
 
   const value = useMemo(
     () => ({
@@ -199,10 +226,42 @@ export function AppProvider({ children }: { children: ReactNode }) {
       deleteTask,
       selectTask,
       notify,
+      openTab,
+      closeTab,
+      activateTab,
       users: mockUsers,
     }),
     [state],
   );
+
+  // Persist tabs/activeTab to localStorage so MDI state survives reloads
+  useEffect(() => {
+    try {
+      localStorage.setItem('mdi-tabs', JSON.stringify({ tabs: state.tabs, activeTabId: state.activeTabId }))
+    } catch {
+      // ignore
+    }
+  }, [state.tabs, state.activeTabId])
+
+  // On mount, restore tabs if present
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem('mdi-tabs')
+      if (raw) {
+        const parsed = JSON.parse(raw) as { tabs?: { id: string; title: string }[]; activeTabId?: string }
+        if (parsed?.tabs && parsed.tabs.length) {
+          // Replace current tabs with restored tabs
+          dispatch({ type: 'openTab', tab: parsed.tabs[0] })
+          // open remaining without changing active each time
+          parsed.tabs.slice(1).forEach(t => dispatch({ type: 'openTab', tab: t }))
+          if (parsed.activeTabId) dispatch({ type: 'activateTab', id: parsed.activeTabId })
+        }
+      }
+    } catch {
+      // ignore
+    }
+    // (intentionally run once on mount)
+  }, [])
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 }

@@ -1,0 +1,50 @@
+.tableWrapper {
+  display: block;
+  padding: 24px;
+  background: var(--bg-surface, #ffffff);
+  color: var(--text-default, #111111);
+}
+.controlsArea {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.controlItem {
+  display: flex;
+  flex-direction: column;
+}
+.controlLabel {
+  font-size: 14px;
+  color: var(--text-muted, #666);
+  margin-bottom: 6px;
+}
+.controlInput,
+.controlSelect {
+  padding: 8px 10px;
+  border-radius: 4px;
+  border: 1px solid var(--border, #ddd);
+  background: var(--input-bg, #fff);
+  color: var(--text-default, #111);
+}
+.message {
+  padding: 24px;
+  color: var(--text-muted, #666);
+}
+.messageError {
+  padding: 24px;
+  color: var(--semantic-error, #b00020);
+}
+.dataTable {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--bg-surface, #fff);
+}
+.th {
+  text-align: left;
+  padding: 12px;
+  border-bottom: 1px solid var(--border, #eee);
+  font-weight: 600;
+}
+.tr:hover { background: var(--hover, #fafafa); }
+.td { padding: 12px; border-bottom: 1px solid var(--border, #eee); }

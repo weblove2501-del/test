@@ -1,0 +1,17 @@
+.mdiTabBar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  background: var(--tabbar-bg, var(--bg-surface));
+  border-top: 1px solid var(--border);
+  z-index: 60;
+}
+.tabList { display:flex; gap:8px; padding: 6px 12px; overflow:auto; }
+.tab { display:flex; align-items:center; gap:8px; padding:6px 10px; border-radius:6px; background: transparent; }
+.tabTitle { font-size: 13px; color: var(--text-muted); }
+.closeBtn { background: transparent; border: none; cursor: pointer; }
+.active { background: var(--brand); color: #fff; }

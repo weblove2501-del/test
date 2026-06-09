@@ -106,3 +106,32 @@ Notes:
 
 - The mock API will return a token and user for `admin@example.com` with password `password`.
 - `AppContext` first tries to call `/api/login`. If the endpoint is not available it falls back to local mock users.
+
+---
+
+## Admin System (MDI Layout Framework)
+
+이 리포지토리는 엔터프라이즈용 MDI 레이아웃 프레임워크 샘플입니다. 주요 특징:
+
+- GNB / LNB / MDI 탭 구조로 화면 구성
+- 디자인과 로직의 엄격한 분리 (CSS Modules + tokens)
+- 데이터 드리븐 테이블과 필터 구성
+- API 주소는 `VITE_API_BASE`로 한 줄만 변경하면 전체가 전환됩니다
+
+개발자 가이드:
+
+- API 변경: `.env`에 `VITE_API_BASE`를 설정하세요.
+- 더미 데이터: `public/mock` 폴더 내부의 json 파일을 확인하세요.
+- 전역 상태: `src/context/AppContext.tsx`에서 탭/유저/로그인 로직을 확인하세요.
+
+테스트 및 빌드:
+
+```bash
+pnpm install
+pnpm dev    # 개발 서버: http://localhost:5173 (또는 다른 포트)
+pnpm test   # Vitest
+pnpm build  # 프로덕션 빌드
+```
+
+원하시면 이 README에 아키텍처 다이어그램, 컴포넌트 사용 예시, 또는 API 스펙 예시를 추가해드리겠습니다.
+
