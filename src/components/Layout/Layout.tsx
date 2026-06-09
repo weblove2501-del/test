@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import type { ReactNode } from 'react'
 import { useAppContext } from '../../context/AppContext';
 import httpFetch from '../../api/http';
 import styles from './Layout.module.css';
@@ -75,7 +76,7 @@ const statusColor = {
   대기: styles.statusBadgeWarning,
 };
 
-export default function Layout() {
+export default function Layout({ children }: { children?: ReactNode }) {
   const { notification } = useAppContext();
   const [isLnbOpen, setIsLnbOpen] = useState(true);
   const [employees, setEmployees] = useState<Employee[]>([]);
@@ -170,11 +171,7 @@ export default function Layout() {
 
       <div className={styles.layout__body}>
         {/* screen-reader live region for global notifications */}
-        <div
-          role="status"
-          aria-live="polite"
-          style={{ position: 'absolute', left: -9999, top: 'auto', width: 1, height: 1, overflow: 'hidden' }}
-        >
+        <div role="status" aria-live="polite" className={styles.visuallyHidden}>
           {notification ?? ''}
         </div>
         <aside
@@ -196,8 +193,12 @@ export default function Layout() {
         </aside>
 
         <main className={styles.content}>
-          <section className={styles.content__hero}>
-            <div>
+          {children ? (
+            children
+          ) : (
+            <>
+            <section className={styles.content__hero}>
+              <div>
               <p className={styles.content__badge}>업무 시스템</p>
               <h1 className={styles.content__title}>업무 목록</h1>
             </div>
@@ -299,6 +300,8 @@ export default function Layout() {
               </tbody>
             </table>
           </section>
+            </>
+          )}
         </main>
       </div>
 

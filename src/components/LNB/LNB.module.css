@@ -1,0 +1,19 @@
+.lnb {
+  display: flex;
+  flex-direction: column;
+  background: var(--lnb-bg, var(--bg-surface));
+  border-right: 1px solid var(--border);
+  height: calc(100vh - 64px); /* subtract GNB height roughly */
+  transition: width 240ms ease, min-width 240ms ease;
+  overflow: hidden;
+}
+.lnb.open { width: 240px; min-width: 240px; }
+.lnb.closed { width: 60px; min-width: 60px; }
+.topControls { display:flex; justify-content:flex-end; padding:8px; }
+.hamburger { background: transparent; border: none; cursor: pointer; padding:6px; }
+.menuList { display:flex; flex-direction: column; gap:6px; padding:8px; }
+.menuItem { display:flex; align-items:center; gap:8px; padding:10px; border-radius:6px; cursor:pointer; }
+.menuItem:hover { background: var(--hover); }
+.icon { width:32px; text-align:center; }
+.label { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.lnb.closed .label { display:none; }

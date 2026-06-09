@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import type { FilterState } from '../types'
 import { useAppContext } from '../context/AppContext'
 import styles from './TaskList.module.css'
 
@@ -42,13 +43,23 @@ export default function TaskList({ onCreateTask, onSelectTask }: TaskListProps) 
           placeholder="업무명 또는 설명 검색"
           onChange={(event) => setFilter({ query: event.target.value })}
         />
-        <select value={filter.status} onChange={(event) => setFilter({ status: event.target.value as any })}>
+        <select
+          value={filter.status}
+          onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
+            setFilter({ status: event.target.value as FilterState['status'] })
+          }
+        >
           <option value="전체">전체 상태</option>
           <option value="대기">대기</option>
           <option value="진행">진행</option>
           <option value="완료">완료</option>
         </select>
-        <select value={filter.assignee} onChange={(event) => setFilter({ assignee: event.target.value as any })}>
+        <select
+          value={filter.assignee}
+          onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
+            setFilter({ assignee: event.target.value as FilterState['assignee'] })
+          }
+        >
           {assignees.map((name) => (
             <option key={name} value={name}>
               {name}

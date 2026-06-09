@@ -1,3 +1,15 @@
+.layout { }
+.layout__gnb { }
+.layout__body { display:flex }
+.content { flex:1 }
+.visuallyHidden {
+  position: absolute;
+  left: -9999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
 .layout {
   min-height: 100vh;
   display: flex;

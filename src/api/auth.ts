@@ -30,7 +30,7 @@ export async function loginApi(email: string, password: string): Promise<LoginRe
       token: String(data.token),
       expiresIn: data.expiresIn,
     };
-  } catch (err) {
+  } catch {
     return { ok: false, message: 'Network error or auth endpoint not available' };
   }
 }
@@ -55,7 +55,7 @@ export async function refreshApi(token: string): Promise<RefreshResult> {
     const data = await res.json();
     if (!data || !data.token) return { ok: false, message: 'Invalid refresh response' };
     return { ok: true, token: String(data.token), expiresIn: data.expiresIn };
-  } catch (err) {
+  } catch {
     return { ok: false, message: 'Network error or refresh endpoint not available' };
   }
 }
